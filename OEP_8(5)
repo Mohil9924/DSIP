@@ -1,0 +1,28 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from skimage.exposure import match_histograms
+def generate_reference(shape, mean=128, std=50, seed=42):
+    """Synthetic reference image with a target Gaussian intensity distribution."""
+    rng = np.random.default_rng(seed)
+    ref = rng.normal(loc=mean, scale=std, size=shape)
+    ref = np.clip(ref, 0, 255).astype(np.uint8)
+    return ref
+img5 = cv2.imread('D:\Picture5.png', cv2.IMREAD_GRAYSCALE)
+# ---- Histogram Equalization ----
+hist_eq_img5 = cv2.equalizeHist(img5)
+# ---- Histogram Matching ----
+reference5 = generate_reference(img5.shape, mean=128, std=35)
+hist_match_img5 = match_histograms(img5, reference5, channel_axis=None).astype(np.uint8)
+plt.figure(figsize=(15, 5))
+plt.subplot(1, 3, 1)
+plt.title("Original (5.png)")
+plt.imshow(img5, cmap='gray'); plt.axis('off')
+plt.subplot(1, 3, 2)
+plt.title("Histogram Equalization")
+plt.imshow(hist_eq_img5, cmap='gray'); plt.axis('off')
+plt.subplot(1, 3, 3)
+plt.title("Histogram Matching (target μ=128, σ=35)")
+plt.imshow(hist_match_img5, cmap='gray'); plt.axis('off')
+plt.tight_layout()
+plt.show()
