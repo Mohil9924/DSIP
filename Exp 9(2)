@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the image (using raw string 'r' for Windows paths)
+image = cv2.imread(r'D:\photo.webp')
+
+# Verify image loading
+if image is None:
+    raise FileNotFoundError("Could not read image from 'D:\\photo.jpg'. Check the file path.")
+
+# Convert BGR (OpenCV default) to RGB (Matplotlib default)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Define the size of the Averaging filter kernel
+kernel_size = (5, 5)
+
+# Create the Averaging filter kernel
+kernel = np.ones(kernel_size, dtype=np.float32) / (kernel_size[0] * kernel_size[1])
+
+# Apply the Averaging filter for smoothing
+smoothed_image = cv2.filter2D(image_rgb, -1, kernel)
+
+# Display the original and smoothed images side-by-side in the Plots tab
+fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+
+axes[0].imshow(image_rgb)
+axes[0].set_title('Original Image')
+axes[0].axis('off')
+
+axes[1].imshow(smoothed_image)
+axes[1].set_title('Averaging Filter (Smoothed)')
+axes[1].axis('off')
+
+plt.tight_layout()
+plt.show()
