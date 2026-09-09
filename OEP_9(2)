@@ -1,0 +1,26 @@
+import cv2
+import numpy as np
+
+# Load X-Ray image in grayscale using raw string path
+img_path = r"D:\Picture2.png"
+img2 = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+
+if img2 is None:
+    print("Error: Image not found. Check the file path.")
+else:
+    # Step 1: Smoothing via Gaussian Filter (suppresses high-frequency noise)
+    smoothed_2 = cv2.GaussianBlur(img2, (3, 3), sigmaX=1.0)
+
+    # Step 2: Contrast Enhancement using CLAHE (enhances subtle bone/tissue contrast)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    contrast_2 = clahe.apply(smoothed_2)
+
+    # Step 3: High-Boost Sharpening (enhances fine structural boundaries)
+    kernel_sharpen = np.array([[ 0, -1,  0],
+                               [-1,  5, -1],
+                               [ 0, -1,  0]])
+    enhanced_2 = cv2.filter2D(contrast_2, -1, kernel_sharpen)
+
+    # Display and Save Results
+    cv2.imwrite(r"D:\enhanced_Picture2.png", enhanced_2)
+    print("Image 2 enhanced and saved successfully as 'D:\\enhanced_Picture2.png'!")
