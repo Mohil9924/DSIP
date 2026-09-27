@@ -1,0 +1,53 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the signal
+signal = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+
+# 1. Compute the FFT of the signal
+fft_result = np.fft.fft(signal)
+
+# 2. Compute the magnitude and phase spectrum
+magnitude_spectrum = np.abs(fft_result)
+phase_spectrum = np.angle(fft_result)
+
+# 3. Compute the IFFT of the FFT result
+reconstructed_signal = np.fft.ifft(fft_result)
+
+# --- Visualization ---
+plt.figure(figsize=(12, 8))
+
+# Original Signal
+plt.subplot(2, 2, 1)
+plt.plot(signal, 'bo-', label='Original')
+plt.title('Original Signal')
+plt.xlabel('Sample Index')
+plt.ylabel('Amplitude')
+plt.grid(True)
+
+# Magnitude Spectrum
+plt.subplot(2, 2, 2)
+plt.stem(magnitude_spectrum)
+plt.title('Magnitude Spectrum')
+plt.xlabel('Frequency Bin')
+plt.ylabel('Magnitude')
+plt.grid(True)
+
+# Phase Spectrum
+plt.subplot(2, 2, 3)
+plt.stem(phase_spectrum)
+plt.title('Phase Spectrum')
+plt.xlabel('Frequency Bin')
+plt.ylabel('Phase (radians)')
+plt.grid(True)
+
+# Reconstructed Signal (using np.real to drop negligible imaginary float noise)
+plt.subplot(2, 2, 4)
+plt.plot(np.real(reconstructed_signal), 'ro--', label='Reconstructed')
+plt.title('Reconstructed Signal (IFFT)')
+plt.xlabel('Sample Index')
+plt.ylabel('Amplitude')
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
