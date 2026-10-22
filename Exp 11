@@ -1,0 +1,37 @@
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load image as grayscale
+image = cv2.imread("D:\images.png", 0)
+
+# Define the kernel (structuring element)
+kernel = np.ones((5, 5), np.uint8)
+
+# Perform Morphological Operations
+erosion = cv2.erode(image, kernel, iterations=1)
+dilation = cv2.dilate(image, kernel, iterations=1)
+opening = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+closing = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
+
+# Prepare images and titles for plotting
+images = [image, erosion, dilation, opening, closing]
+titles = [
+    "Original Image",
+    "Erosion",
+    "Dilation",
+    "Opening (Erosion -> Dilation)",
+    "Closing (Dilation -> Erosion)",
+]
+
+# Create a figure to display all images in a row
+plt.figure(figsize=(18, 5))
+
+for i in range(5):
+    plt.subplot(1, 5, i + 1)
+    plt.imshow(images[i], cmap="gray")
+    plt.title(titles[i])
+    plt.axis("off")  # Hide axes ticks
+
+plt.tight_layout()
+plt.show()
