@@ -1,0 +1,26 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+Fs = 10000  # Sampling frequency (10 kHz)
+Fc = 3000   # Cutoff frequency (3 kHz)
+N = 31      # Number of taps
+
+# 2. Design High-Pass FIR Filter
+b = firwin(numtaps=N, cutoff=Fc, window='hann', pass_zero='highpass', fs=Fs)
+
+# 3. Calculate Frequency Response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+# 4. Plot Frequency Response
+plt.figure(figsize=(8, 4))
+plt.plot(f, magnitude_db, 'g', linewidth=2)
+plt.title('FIR High Pass Filter Response (Cutoff = 3 kHz)')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.axvline(Fc, color='r', linestyle='--', label='Cutoff (3 kHz)')
+plt.legend()
+plt.tight_layout()
+plt.show()
