@@ -1,0 +1,27 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+Fs = 10000          # Sampling frequency (10 kHz)
+Fc = [3000, 4500]   # Bandpass cutoff range (3 kHz to 4.5 kHz)
+N = 31              # Number of taps
+
+# 2. Design Band-Pass FIR Filter
+b = firwin(numtaps=N, cutoff=Fc, window='hann', pass_zero='bandpass', fs=Fs)
+
+# 3. Calculate Frequency Response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+# 4. Plot Frequency Response
+plt.figure(figsize=(8, 4))
+plt.plot(f, magnitude_db, 'm', linewidth=2)
+plt.title('FIR Band Pass Filter Response (3 kHz - 4.5 kHz)')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.axvline(Fc[0], color='r', linestyle='--', label='Fc1 (3 kHz)')
+plt.axvline(Fc[1], color='m', linestyle='--', label='Fc2 (4.5 kHz)')
+plt.legend()
+plt.tight_layout()
+plt.show()
